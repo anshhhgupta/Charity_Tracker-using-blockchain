@@ -1,0 +1,42 @@
+{
+  "name": "chain-of-hope-dapp",
+  "version": "1.0.0",
+  "description": "A transparent blockchain-based charity donation platform",
+  "main": "index.js",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "start": "node scripts/start-local.js",
+    "backend:install": "cd backend && npm install",
+    "backend:compile": "cd backend && npm run compile",
+    "backend:test": "cd backend && npm test",
+    "backend:deploy": "cd backend && npm run deploy",
+    "backend:deploy:localhost": "cd backend && npm run deploy:localhost",
+    "backend:node": "cd backend && npm run node",
+    "frontend:install": "cd frontend && npm install",
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build",
+    "frontend:preview": "cd frontend && npm run preview",
+    "clean": "rm -rf backend/node_modules frontend/node_modules backend/artifacts backend/cache frontend/dist"
+  },
+  "keywords": [
+    "blockchain",
+    "charity",
+    "donation",
+    "ethereum",
+    "solidity",
+    "react",
+    "vite",
+    "hardhat",
+    "ethers"
+  ],
+  "author": "Chain of Hope Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chain-of-hope/dapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chain-of-hope/dapp/issues"
+  },
+  "homepage": "https://chainofhope.org"
+}
