@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 const DonatePage = () => {
   const { account, connectWallet, isConnected, signer } = useWallet()
   const { donate } = useContract()
-  const { campaigns, demoMode, loading } = useEvents()
+  const { campaigns, loading } = useEvents()
   const [selectedCampaign, setSelectedCampaign] = useState(null)
   const [formData, setFormData] = useState({
     amount: '',
@@ -62,27 +62,6 @@ const DonatePage = () => {
     }
 
     if (!validateForm()) {
-      return
-    }
-
-    if (demoMode) {
-      // Demo mode - simulate donation
-      setDonating(true)
-      try {
-        await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate transaction time
-        toast.success(`Demo: Successfully donated ${formData.amount} ETH to "${selectedCampaign.name}"!`)
-        
-        // Reset form
-        setFormData({
-          amount: '',
-          message: '',
-          isAnonymous: false
-        })
-      } catch (error) {
-        toast.error('Demo donation failed')
-      } finally {
-        setDonating(false)
-      }
       return
     }
 
@@ -161,12 +140,6 @@ const DonatePage = () => {
             Support meaningful causes with transparent, secure blockchain donations. 
             Choose a campaign and make a difference today.
           </p>
-          {demoMode && (
-            <div className="mt-4 inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm">
-              <Shield className="h-4 w-4 mr-2" />
-              Demo Mode - No real transactions will be made
-            </div>
-          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -435,7 +408,7 @@ const DonatePage = () => {
                       {donating ? (
                         <div className="flex items-center justify-center">
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                          {demoMode ? 'Processing Demo Donation...' : 'Processing Donation...'}
+                          Processing Donation...
                         </div>
                       ) : !isConnected ? (
                         <span className="flex items-center justify-center">
@@ -444,7 +417,7 @@ const DonatePage = () => {
                         </span>
                       ) : (
                         <span className="flex items-center justify-center">
-                          {demoMode ? 'Demo: ' : ''}Donate {formData.amount || '0.00'} ETH
+                          Donate {formData.amount || '0.00'} ETH
                           <Heart className="ml-2 h-5 w-5" />
                         </span>
                       )}

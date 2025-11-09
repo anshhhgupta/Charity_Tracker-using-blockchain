@@ -4,6 +4,7 @@ import { ContractProvider } from './context/ContractContext'
 import { EventProvider } from './context/EventContext'
 import ErrorBoundary from './components/ErrorBoundary'
 import DebugInfo from './components/DebugInfo'
+import NetworkGuard from './components/NetworkGuard'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Donate from './pages/Donate'
@@ -24,18 +25,20 @@ function App() {
             <Router>
               <div className="min-h-screen bg-gray-50">
                 <Navbar />
-                    <main>
-                      <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/donate" element={<Donate />} />
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/campaigns" element={<Campaigns />} />
-                        <Route path="/create-campaign" element={<CreateCampaign />} />
-                        <Route path="/campaign/:id" element={<CampaignDetails />} />
-                        <Route path="/admin" element={<AdminPanel />} />
-                      </Routes>
-                    </main>
+                <NetworkGuard>
+                  <main>
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/donate" element={<Donate />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/campaigns" element={<Campaigns />} />
+                      <Route path="/create-campaign" element={<CreateCampaign />} />
+                      <Route path="/campaign/:id" element={<CampaignDetails />} />
+                      <Route path="/admin" element={<AdminPanel />} />
+                    </Routes>
+                  </main>
+                </NetworkGuard>
               </div>
               <Toaster />
               <DebugInfo />

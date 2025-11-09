@@ -13,7 +13,8 @@ const CreateCampaign = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    goal: ''
+    goal: '',
+    deadline: 30 // Default to 30 days
   });
 
   const handleInputChange = (e) => {
@@ -50,10 +51,14 @@ const CreateCampaign = () => {
     try {
       setLoading(true);
       
+      // Calculate deadline timestamp (current time + days in seconds)
+      const deadlineTimestamp = Math.floor(Date.now() / 1000) + (formData.deadline * 24 * 60 * 60);
+      
       const result = await createCampaign(
         formData.name.trim(),
         formData.description.trim(),
         formData.goal,
+        deadlineTimestamp,
         signer
       );
       
@@ -62,7 +67,8 @@ const CreateCampaign = () => {
         setFormData({
           name: '',
           description: '',
-          goal: ''
+          goal: '',
+          deadline: 30
         });
         
         // Navigate to campaigns page
@@ -175,6 +181,27 @@ const CreateCampaign = () => {
               </div>
               <p className="mt-1 text-sm text-gray-500">
                 Set a realistic fundraising goal for your campaign
+              </p>
+            </div>
+
+            <div>
+              <label htmlFor="deadline" className="block text-sm font-medium text-gray-700 mb-2">
+                Campaign Duration (Days) *
+              </label>
+              <input
+                type="number"
+                id="deadline"
+                name="deadline"
+                value={formData.deadline}
+                onChange={handleInputChange}
+                placeholder="30"
+                min="1"
+                max="365"
+                className="input-field"
+                required
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                Campaign will run for {formData.deadline} days (ends on {new Date(Date.now() + formData.deadline * 24 * 60 * 60 * 1000).toLocaleDateString()})
               </p>
             </div>
 

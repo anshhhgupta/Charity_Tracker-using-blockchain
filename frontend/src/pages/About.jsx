@@ -68,22 +68,22 @@ const AboutPage = () => {
 
   const milestones = [
     {
-      year: '2024',
+      year: '2025',
       title: 'Platform Launch',
       description: 'Chain of Hope launched with initial charity partnerships and smart contract deployment.'
     },
     {
-      year: '2024',
+      year: '2025',
       title: 'First 1000 Donors',
       description: 'Reached milestone of 1000 donors and $50,000 in transparent donations.'
     },
     {
-      year: '2024',
+      year: '2025',
       title: 'Multi-Chain Support',
       description: 'Expanded to support multiple blockchain networks for broader accessibility.'
     },
     {
-      year: '2024',
+      year: '2025',
       title: 'Global Expansion',
       description: 'Partnered with charities across 25 countries for worldwide humanitarian impact.'
     }

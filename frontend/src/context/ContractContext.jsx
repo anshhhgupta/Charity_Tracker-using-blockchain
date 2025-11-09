@@ -23,8 +23,8 @@ export const ContractProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  // Contract address from deployment
-  const CHARITY_ADDRESS = '0xe871C6Ed4288117Df7bb310DeCe299691A5A1c41' // Deployed on Sepolia testnet
+  // Contract address from deployment - use environment variable
+  const CHARITY_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS || '0x379A63482A2401a0d1b30f57921A58dEAB022aC6'
 
   useEffect(() => {
     initializeContract()
@@ -53,7 +53,7 @@ export const ContractProvider = ({ children }) => {
         // Initialize contract with signer if available, otherwise with provider for read operations
         const charity = new ethers.Contract(
           CHARITY_ADDRESS,
-          CharityABI,
+          CharityABI.abi,
           signer || contractProvider
         )
         setCharityContract(charity)
@@ -137,7 +137,7 @@ export const ContractProvider = ({ children }) => {
   }
 
   // Create a new campaign with enhanced transaction handling
-  const createCampaign = async (name, description, goal, signer) => {
+  const createCampaign = async (name, description, goal, deadline, signer) => {
     if (!charityContract) {
       throw new Error('Contract not initialized')
     }
@@ -146,7 +146,8 @@ export const ContractProvider = ({ children }) => {
       () => charityContract.connect(signer).createCampaign(
         name,
         description,
-        ethers.parseEther(goal.toString())
+        ethers.parseEther(goal.toString()),
+        deadline
       ),
       {
         pendingMessage: 'Creating campaign...',

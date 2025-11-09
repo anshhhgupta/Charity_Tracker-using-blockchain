@@ -23,7 +23,6 @@ const HomeContent = () => {
     campaigns, 
     stats, 
     loading, 
-    demoMode,
     getRecentDonations 
   } = useEvents()
   const [donating, setDonating] = useState({})
@@ -123,12 +122,6 @@ const HomeContent = () => {
               Transparent charity donations powered by blockchain technology. 
               Make a difference with complete transparency and trust.
             </p>
-            {demoMode && (
-              <div className="mb-6 inline-flex items-center px-4 py-2 bg-blue-500 bg-opacity-20 backdrop-blur-sm text-blue-100 rounded-full text-sm border border-blue-300">
-                <Shield className="h-4 w-4 mr-2" />
-                Demo Mode Active - Showcasing Sample Campaigns
-              </div>
-            )}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/campaigns"

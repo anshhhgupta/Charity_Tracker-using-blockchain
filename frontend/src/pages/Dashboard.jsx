@@ -50,13 +50,13 @@ const DashboardContent = () => {
       
       // Generate sample chart data (in a real app, this would come from the contract)
       const sampleData = [
-        { date: '2024-01-01', donations: 12.5, withdrawals: 10.0 },
-        { date: '2024-01-02', donations: 8.3, withdrawals: 5.0 },
-        { date: '2024-01-03', donations: 15.7, withdrawals: 12.0 },
-        { date: '2024-01-04', donations: 22.1, withdrawals: 18.0 },
-        { date: '2024-01-05', donations: 18.9, withdrawals: 15.0 },
-        { date: '2024-01-06', donations: 25.4, withdrawals: 20.0 },
-        { date: '2024-01-07', donations: 19.8, withdrawals: 16.0 },
+        { date: '2025-01-01', donations: 12.5, withdrawals: 10.0 },
+        { date: '2025-01-02', donations: 8.3, withdrawals: 5.0 },
+        { date: '2025-01-03', donations: 15.7, withdrawals: 12.0 },
+        { date: '2025-01-04', donations: 22.1, withdrawals: 18.0 },
+        { date: '2025-01-05', donations: 18.9, withdrawals: 15.0 },
+        { date: '2025-01-06', donations: 25.4, withdrawals: 20.0 },
+        { date: '2025-01-07', donations: 19.8, withdrawals: 16.0 },
       ]
       setChartData(sampleData)
     } catch (error) {

@@ -31,7 +31,6 @@ export const EventProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(true);
   const [eventListeners, setEventListeners] = useState([]);
-  const [demoMode, setDemoMode] = useState(false);
 
   // Load demo data for demonstration purposes
   const loadDemoData = useCallback(() => {
@@ -49,7 +48,6 @@ export const EventProvider = ({ children }) => {
     
     setExpenditures([]);
     setStats(demoStats);
-    setDemoMode(true);
     
     console.log('EventContext: Demo data loaded successfully');
   }, []);
@@ -169,19 +167,12 @@ export const EventProvider = ({ children }) => {
         totalRaised: totalRaised
       });
       
-      // If no blockchain data found, load demo data for better UX
-      if (allCampaigns.length === 0 && allDonations.length === 0 && !demoMode) {
-        console.log('EventContext: No blockchain data found, loading demo data for demonstration...');
-        loadDemoData();
-      }
+      console.log('EventContext: Loaded', allCampaigns.length, 'campaigns and', allDonations.length, 'donations from blockchain');
 
     } catch (error) {
       console.error('Error loading initial data:', error);
-      // Load demo data when blockchain data fails to load
-      if (!demoMode) {
-        console.log('EventContext: Blockchain error, falling back to demo data...');
-        loadDemoData();
-      }
+      // Don't load demo data - show actual blockchain state
+      console.log('EventContext: Will show actual blockchain data only');
     } finally {
       setLoading(false);
     }
@@ -600,7 +591,6 @@ export const EventProvider = ({ children }) => {
     expenditures,
     stats,
     loading,
-    demoMode,
     
     // Actions
     loadInitialData,

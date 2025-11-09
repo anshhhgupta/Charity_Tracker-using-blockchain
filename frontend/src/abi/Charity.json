@@ -1,1129 +1,629 @@
-[
-  {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [],
-    "name": "EnforcedPause",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ExpectedPause",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnableInvalidOwner",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "OwnableUnauthorizedAccount",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ReentrancyGuardReentrantCall",
-    "type": "error"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "campaignId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "CampaignActivated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "campaignId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "creator",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "goal",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "CampaignCreated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "campaignId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "CampaignDeactivated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "pauser",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "ContractPaused",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "unpauser",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "ContractUnpaused",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "campaignId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "donor",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "totalRaised",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "DonationReceived",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "expenditureId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "campaignId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "approver",
-        "type": "address"
-      }
-    ],
-    "name": "ExpenditureApproved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "expenditureId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "campaignId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "executor",
-        "type": "address"
-      }
-    ],
-    "name": "ExpenditureExecuted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "expenditureId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "campaignId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "requester",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "purpose",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "ExpenditureRequested",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "Paused",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "Unpaused",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_campaignId",
-        "type": "uint256"
-      }
-    ],
-    "name": "activateCampaign",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_expenditureId",
-        "type": "uint256"
-      }
-    ],
-    "name": "approveExpenditure",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "campaignCounter",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "campaignDonations",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "donor",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "isRefunded",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "campaignExpenditures",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "campaignId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "purpose",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "requester",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "isApproved",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "isExecuted",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "requestedAt",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "campaigns",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "description",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "goal",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "raised",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "creator",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "isActive",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "createdAt",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "totalDonors",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_description",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_goal",
-        "type": "uint256"
-      }
-    ],
-    "name": "createCampaign",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_campaignId",
-        "type": "uint256"
-      }
-    ],
-    "name": "deactivateCampaign",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_campaignId",
-        "type": "uint256"
-      }
-    ],
-    "name": "donate",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "donorAmounts",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "emergencyWithdraw",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_expenditureId",
-        "type": "uint256"
-      }
-    ],
-    "name": "executeExpenditure",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "expenditureCounter",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "expenditures",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "campaignId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "purpose",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "requester",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "isApproved",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "isExecuted",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "requestedAt",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_campaignId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getCampaign",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "description",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "goal",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "raised",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "creator",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "isActive",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "createdAt",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "totalDonors",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_campaignId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getCampaignDonations",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "donor",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "isRefunded",
-            "type": "bool"
-          }
-        ],
-        "internalType": "struct Charity.Donation[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_campaignId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getCampaignExpenditures",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "id",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "campaignId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "purpose",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "requester",
-            "type": "address"
-          },
-          {
-            "internalType": "bool",
-            "name": "isApproved",
-            "type": "bool"
-          },
-          {
-            "internalType": "bool",
-            "name": "isExecuted",
-            "type": "bool"
-          },
-          {
-            "internalType": "uint256",
-            "name": "requestedAt",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Charity.Expenditure[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_campaignId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getCampaignProgress",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getContractBalance",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_campaignId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_donor",
-        "type": "address"
-      }
-    ],
-    "name": "getDonorCampaignAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_donor",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_campaignId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getDonorContribution",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_expenditureId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getExpenditure",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "campaignId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "purpose",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "requester",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "isApproved",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "isExecuted",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "requestedAt",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getTotalCampaigns",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getTotalDonations",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getTotalExpenditures",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "pause",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "paused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_campaignId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_purpose",
-        "type": "string"
-      }
-    ],
-    "name": "requestExpenditure",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "unpause",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-]
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "Charity",
+  "sourceName": "contracts/Charity-Final.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "CampaignExpired",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "CampaignNotFound",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "EmptyDescription",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "EmptyName",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "EmptyPurpose",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ExpenditureAlreadyExecuted",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ExpenditureNotFound",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InsufficientBalance",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidAmount",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidDeadline",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidDonation",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidGoal",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidRecipient",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotCampaignAdmin",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ReentrancyGuardReentrantCall",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "TransferFailed",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "admin",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "goal",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "deadline",
+          "type": "uint256"
+        }
+      ],
+      "name": "CampaignCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "donor",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "DonationReceived",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "EmergencyWithdrawal",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "expenditureId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "ExpenditureExecuted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "expenditureId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "purpose",
+          "type": "string"
+        }
+      ],
+      "name": "ExpenditureRequested",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "campaignCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "goal",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "deadline",
+          "type": "uint256"
+        }
+      ],
+      "name": "createCampaign",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        }
+      ],
+      "name": "donate",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address payable",
+          "name": "to",
+          "type": "address"
+        }
+      ],
+      "name": "emergencyWithdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "expenditureId",
+          "type": "uint256"
+        }
+      ],
+      "name": "executeExpenditure",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCampaign",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "goal",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "balance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "admin",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "deadline",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "expenditureCount",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCampaignExpenditures",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "purpose",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "executed",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct Charity.Expenditure[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCampaignProgress",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getContractBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "expenditureId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getExpenditure",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "purpose",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "executed",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        }
+      ],
+      "name": "isCampaignActive",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "campaignId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "purpose",
+          "type": "string"
+        }
+      ],
+      "name": "requestExpenditure",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "expenditureId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b503380603557604051631e4fbdf760e01b81526000600482015260240160405180910390fd5b603c816045565b50600180556095565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b61172d806100a46000396000f3fe6080604052600436106100e85760003560e01c80638da5cb5b1161008a578063eb93292c11610059578063eb93292c14610279578063f14faf6f14610299578063f2fde38b146102ac578063fb8a7612146102cc57600080fd5b80638da5cb5b146101d4578063a318f269146101fc578063b17a66de1461021c578063e1e330091461024957600080fd5b80636ff1c9bc116100c65780636ff1c9bc14610167578063715018a6146101895780637274e30d1461019e5780638ab9b92a146101b457600080fd5b806308dfff3a146100ed5780635598f8cc146101205780636f9fb98a14610154575b600080fd5b3480156100f957600080fd5b5061010d61010836600461110f565b6102fc565b6040519081526020015b60405180910390f35b34801561012c57600080fd5b5061014061013b366004611179565b61056a565b6040516101179897969594939291906111d8565b34801561016057600080fd5b504761010d565b34801561017357600080fd5b5061018761018236600461123b565b610722565b005b34801561019557600080fd5b50610187610841565b3480156101aa57600080fd5b5061010d60025481565b3480156101c057600080fd5b5061010d6101cf366004611179565b610855565b3480156101e057600080fd5b506000546040516001600160a01b039091168152602001610117565b34801561020857600080fd5b5061010d61021736600461125f565b6108c8565b34801561022857600080fd5b5061023c610237366004611179565b610a02565b60405161011791906112dd565b34801561025557600080fd5b50610269610264366004611179565b610b55565b6040519015158152602001610117565b34801561028557600080fd5b50610187610294366004611378565b610b94565b6101876102a7366004611179565b610da1565b3480156102b857600080fd5b506101876102c736600461123b565b610e7e565b3480156102d857600080fd5b506102ec6102e7366004611378565b610ebe565b604051610117949392919061139a565b6000856002548110610321576040516337f9b70b60e11b815260040160405180910390fd5b600087815260036020526040902060060154879042111561035557604051638320b48360e01b815260040160405180910390fd5b60008881526003602052604090206005015488906001600160a01b031633146103915760405163538f0ebf60e01b815260040160405180910390fd5b876000036103b25760405163162908e360e11b815260040160405180910390fd5b6001600160a01b0387166103d957604051634e46966960e11b815260040160405180910390fd5b60008590036103fb57604051630dfa03e560e41b815260040160405180910390fd5b6000898152600360205260409020600481015489111561042e57604051631e9acf1760e31b815260040160405180910390fd5b806007018054905094508060070160405180608001604052808b81526020018a6001600160a01b0316815260200189898080601f016020809104026020016040519081016040528093929190818152602001838380828437600092018290525093855250505060209182018190528354600180820186559482529082902083516004909202019081559082015192810180546001600160a01b0319166001600160a01b0390941693909317909255604081015190919060028201906104f39082611472565b5060608201518160030160006101000a81548160ff0219169083151502179055505050876001600160a01b0316858b7f38b944956230fe356e2fc86594f0a8b88d413fbb0f43df00241921dfb01482fe8c8b8b6040516105559392919061155b565b60405180910390a45050505095945050505050565b6000606080600080600080600088600254811061059a576040516337f9b70b60e11b815260040160405180910390fd5b6000600360008c8152602001908152602001600020905080600001548160010182600201836003015484600401548560050160009054906101000a90046001600160a01b0316866006015487600701805490508680546105f9906113ed565b80601f0160208091040260200160405190810160405280929190818152602001828054610625906113ed565b80156106725780601f1061064757610100808354040283529160200191610672565b820191906000526020600020905b81548152906001019060200180831161065557829003601f168201915b50505050509650858054610685906113ed565b80601f01602080910402602001604051908101604052809291908181526020018280546106b1906113ed565b80156106fe5780601f106106d3576101008083540402835291602001916106fe565b820191906000526020600020905b8154815290600101906020018083116106e157829003601f168201915b50505050509550995099509950995099509950995099505050919395975091939597565b61072a61100a565b610732611037565b6001600160a01b03811661075957604051634e46966960e11b815260040160405180910390fd5b47600081900361077c5760405163162908e360e11b815260040160405180910390fd5b816001600160a01b03167f23d6711a1d031134a36921253c75aa59e967d38e369ac625992824315e204f20826040516107b791815260200190565b60405180910390a26000826001600160a01b03168260405160006040518083038185875af1925050503d806000811461080c576040519150601f19603f3d011682016040523d82523d6000602084013e610811565b606091505b5050905080610833576040516312171d8360e31b815260040160405180910390fd5b505061083e60018055565b50565b61084961100a565b6108536000611061565b565b600081600254811061087a576040516337f9b70b60e11b815260040160405180910390fd5b600083815260036020819052604082209081015490910361089f5760009250506108c2565b600381015460048201546108b4906064611594565b6108be91906115b1565b9250505b50919050565b60008581036108ea57604051632ef1310560e01b815260040160405180910390fd5b600084900361090c5760405163d937d5df60e01b815260040160405180910390fd5b8260000361092d57604051639b60eb4d60e01b815260040160405180910390fd5b42821161094d57604051631da7447960e21b815260040160405180910390fd5b5060028054600180820190925560008181526003602052604090208181559091810161097a888a836115d3565b506002810161098a8688836115d3565b5060038101849055600060048201556005810180546001600160a01b031916339081179091556006820184905560405183907fdc26653af5b99b2da33e2ad69ee6600d9aeccc82b034501db4338309615ca238906109ef908c908c908a908a90611694565b60405180910390a3509695505050505050565b6060816002548110610a27576040516337f9b70b60e11b815260040160405180910390fd5b600083815260036020908152604080832060070180548251818502810185019093528083529193909284015b82821015610b4957600084815260209081902060408051608081018252600486029092018054835260018101546001600160a01b03169383019390935260028301805492939291840191610aa6906113ed565b80601f0160208091040260200160405190810160405280929190818152602001828054610ad2906113ed565b8015610b1f5780601f10610af457610100808354040283529160200191610b1f565b820191906000526020600020905b815481529060010190602001808311610b0257829003601f168201915b50505091835250506003919091015460ff1615156020918201529082526001929092019101610a53565b50505050915050919050565b6000816002548110610b7a576040516337f9b70b60e11b815260040160405180910390fd5b505060009081526003602052604090206006015442111590565b816002548110610bb7576040516337f9b70b60e11b815260040160405180910390fd5b60008381526003602052604090206005015483906001600160a01b03163314610bf35760405163538f0ebf60e01b815260040160405180910390fd5b610bfb611037565b600084815260036020526040902060078101548410610c2d5760405163566dafb760e11b815260040160405180910390fd5b6000816007018581548110610c4457610c446116bb565b60009182526020909120600490910201600381015490915060ff1615610c7d57604051633409745d60e01b815260040160405180910390fd5b600482015481541115610ca357604051631e9acf1760e31b815260040160405180910390fd5b60038101805460ff191660011790558054600483018054600090610cc89084906116d1565b9091555050805460018201546040518281526001600160a01b0390911690819088908a907f2beeb897393025a6f9e7fcd378f2f064c2a9d944e543ac2469740b2d99bafcf49060200160405180910390a46000816001600160a01b03168360405160006040518083038185875af1925050503d8060008114610d66576040519150601f19603f3d011682016040523d82523d6000602084013e610d6b565b606091505b5050905080610d8d576040516312171d8360e31b815260040160405180910390fd5b5050505050610d9b60018055565b50505050565b806002548110610dc4576040516337f9b70b60e11b815260040160405180910390fd5b6000828152600360205260409020600601548290421115610df857604051638320b48360e01b815260040160405180910390fd5b34600003610e1957604051637685480d60e11b815260040160405180910390fd5b600083815260036020526040812060048101805491923492610e3c9084906116e4565b9091555050604051348152339085907f0b5b4c52969ff7329ecf7ee536409fda87812b15a8622bc6e8cdeab3aee14a269060200160405180910390a350505050565b610e8661100a565b6001600160a01b038116610eb557604051631e4fbdf760e01b8152600060048201526024015b60405180910390fd5b61083e81611061565b60008060606000856002548110610ee8576040516337f9b70b60e11b815260040160405180910390fd5b600087815260036020526040902060078101548710610f1a5760405163566dafb760e11b815260040160405180910390fd5b6000816007018881548110610f3157610f316116bb565b6000918252602090912060049091020180546001820154600383015460028401805494955092936001600160a01b03909216929160ff909116908290610f76906113ed565b80601f0160208091040260200160405190810160405280929190818152602001828054610fa2906113ed565b8015610fef5780601f10610fc457610100808354040283529160200191610fef565b820191906000526020600020905b815481529060010190602001808311610fd257829003601f168201915b50505050509150965096509650965050505092959194509250565b6000546001600160a01b031633146108535760405163118cdaa760e01b8152336004820152602401610eac565b60026001540361105a57604051633ee5aeb560e01b815260040160405180910390fd5b6002600155565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6001600160a01b038116811461083e57600080fd5b60008083601f8401126110d857600080fd5b50813567ffffffffffffffff8111156110f057600080fd5b60208301915083602082850101111561110857600080fd5b9250929050565b60008060008060006080868803121561112757600080fd5b85359450602086013593506040860135611140816110b1565b9250606086013567ffffffffffffffff81111561115c57600080fd5b611168888289016110c6565b969995985093965092949392505050565b60006020828403121561118b57600080fd5b5035919050565b6000815180845260005b818110156111b85760208185018101518683018201520161119c565b506000602082860101526020601f19601f83011685010191505092915050565b60006101008a83528060208401526111f28184018b611192565b90508281036040840152611206818a611192565b6060840198909852505060808101949094526001600160a01b039290921660a084015260c083015260e0909101529392505050565b60006020828403121561124d57600080fd5b8135611258816110b1565b9392505050565b6000806000806000806080878903121561127857600080fd5b863567ffffffffffffffff8082111561129057600080fd5b61129c8a838b016110c6565b909850965060208901359150808211156112b557600080fd5b506112c289828a016110c6565b979a9699509760408101359660609091013595509350505050565b600060208083018184528085518083526040925060408601915060408160051b87010184880160005b8381101561136a57888303603f19018552815180518452878101516001600160a01b0316888501528681015160808886018190529061134782870182611192565b606093840151151596909301959095525094870194925090860190600101611306565b509098975050505050505050565b6000806040838503121561138b57600080fd5b50508035926020909101359150565b8481526001600160a01b03841660208201526080604082018190526000906113c490830185611192565b9050821515606083015295945050505050565b634e487b7160e01b600052604160045260246000fd5b600181811c9082168061140157607f821691505b6020821081036108c257634e487b7160e01b600052602260045260246000fd5b601f82111561146d576000816000526020600020601f850160051c8101602086101561144a5750805b601f850160051c820191505b8181101561146957828155600101611456565b5050505b505050565b815167ffffffffffffffff81111561148c5761148c6113d7565b6114a08161149a84546113ed565b84611421565b602080601f8311600181146114d557600084156114bd5750858301515b600019600386901b1c1916600185901b178555611469565b600085815260208120601f198616915b82811015611504578886015182559484019460019091019084016114e5565b50858210156115225787850151600019600388901b60f8161c191681555b5050505050600190811b01905550565b81835281816020850137506000828201602090810191909152601f909101601f19169091010190565b838152604060208201526000611575604083018486611532565b95945050505050565b634e487b7160e01b600052601160045260246000fd5b80820281158282048414176115ab576115ab61157e565b92915050565b6000826115ce57634e487b7160e01b600052601260045260246000fd5b500490565b67ffffffffffffffff8311156115eb576115eb6113d7565b6115ff836115f983546113ed565b83611421565b6000601f841160018114611633576000851561161b5750838201355b600019600387901b1c1916600186901b17835561168d565b600083815260209020601f19861690835b828110156116645786850135825560209485019460019092019101611644565b50868210156116815760001960f88860031b161c19848701351681555b505060018560011b0183555b5050505050565b6060815260006116a8606083018688611532565b6020830194909452506040015292915050565b634e487b7160e01b600052603260045260246000fd5b818103818111156115ab576115ab61157e565b808201808211156115ab576115ab61157e56fea2646970667358221220abfff77cf0b5bdea80a9afc511e377b71734396cf06628590f1b9a4888e8022664736f6c63430008190033",
+  "deployedBytecode": "0x6080604052600436106100e85760003560e01c80638da5cb5b1161008a578063eb93292c11610059578063eb93292c14610279578063f14faf6f14610299578063f2fde38b146102ac578063fb8a7612146102cc57600080fd5b80638da5cb5b146101d4578063a318f269146101fc578063b17a66de1461021c578063e1e330091461024957600080fd5b80636ff1c9bc116100c65780636ff1c9bc14610167578063715018a6146101895780637274e30d1461019e5780638ab9b92a146101b457600080fd5b806308dfff3a146100ed5780635598f8cc146101205780636f9fb98a14610154575b600080fd5b3480156100f957600080fd5b5061010d61010836600461110f565b6102fc565b6040519081526020015b60405180910390f35b34801561012c57600080fd5b5061014061013b366004611179565b61056a565b6040516101179897969594939291906111d8565b34801561016057600080fd5b504761010d565b34801561017357600080fd5b5061018761018236600461123b565b610722565b005b34801561019557600080fd5b50610187610841565b3480156101aa57600080fd5b5061010d60025481565b3480156101c057600080fd5b5061010d6101cf366004611179565b610855565b3480156101e057600080fd5b506000546040516001600160a01b039091168152602001610117565b34801561020857600080fd5b5061010d61021736600461125f565b6108c8565b34801561022857600080fd5b5061023c610237366004611179565b610a02565b60405161011791906112dd565b34801561025557600080fd5b50610269610264366004611179565b610b55565b6040519015158152602001610117565b34801561028557600080fd5b50610187610294366004611378565b610b94565b6101876102a7366004611179565b610da1565b3480156102b857600080fd5b506101876102c736600461123b565b610e7e565b3480156102d857600080fd5b506102ec6102e7366004611378565b610ebe565b604051610117949392919061139a565b6000856002548110610321576040516337f9b70b60e11b815260040160405180910390fd5b600087815260036020526040902060060154879042111561035557604051638320b48360e01b815260040160405180910390fd5b60008881526003602052604090206005015488906001600160a01b031633146103915760405163538f0ebf60e01b815260040160405180910390fd5b876000036103b25760405163162908e360e11b815260040160405180910390fd5b6001600160a01b0387166103d957604051634e46966960e11b815260040160405180910390fd5b60008590036103fb57604051630dfa03e560e41b815260040160405180910390fd5b6000898152600360205260409020600481015489111561042e57604051631e9acf1760e31b815260040160405180910390fd5b806007018054905094508060070160405180608001604052808b81526020018a6001600160a01b0316815260200189898080601f016020809104026020016040519081016040528093929190818152602001838380828437600092018290525093855250505060209182018190528354600180820186559482529082902083516004909202019081559082015192810180546001600160a01b0319166001600160a01b0390941693909317909255604081015190919060028201906104f39082611472565b5060608201518160030160006101000a81548160ff0219169083151502179055505050876001600160a01b0316858b7f38b944956230fe356e2fc86594f0a8b88d413fbb0f43df00241921dfb01482fe8c8b8b6040516105559392919061155b565b60405180910390a45050505095945050505050565b6000606080600080600080600088600254811061059a576040516337f9b70b60e11b815260040160405180910390fd5b6000600360008c8152602001908152602001600020905080600001548160010182600201836003015484600401548560050160009054906101000a90046001600160a01b0316866006015487600701805490508680546105f9906113ed565b80601f0160208091040260200160405190810160405280929190818152602001828054610625906113ed565b80156106725780601f1061064757610100808354040283529160200191610672565b820191906000526020600020905b81548152906001019060200180831161065557829003601f168201915b50505050509650858054610685906113ed565b80601f01602080910402602001604051908101604052809291908181526020018280546106b1906113ed565b80156106fe5780601f106106d3576101008083540402835291602001916106fe565b820191906000526020600020905b8154815290600101906020018083116106e157829003601f168201915b50505050509550995099509950995099509950995099505050919395975091939597565b61072a61100a565b610732611037565b6001600160a01b03811661075957604051634e46966960e11b815260040160405180910390fd5b47600081900361077c5760405163162908e360e11b815260040160405180910390fd5b816001600160a01b03167f23d6711a1d031134a36921253c75aa59e967d38e369ac625992824315e204f20826040516107b791815260200190565b60405180910390a26000826001600160a01b03168260405160006040518083038185875af1925050503d806000811461080c576040519150601f19603f3d011682016040523d82523d6000602084013e610811565b606091505b5050905080610833576040516312171d8360e31b815260040160405180910390fd5b505061083e60018055565b50565b61084961100a565b6108536000611061565b565b600081600254811061087a576040516337f9b70b60e11b815260040160405180910390fd5b600083815260036020819052604082209081015490910361089f5760009250506108c2565b600381015460048201546108b4906064611594565b6108be91906115b1565b9250505b50919050565b60008581036108ea57604051632ef1310560e01b815260040160405180910390fd5b600084900361090c5760405163d937d5df60e01b815260040160405180910390fd5b8260000361092d57604051639b60eb4d60e01b815260040160405180910390fd5b42821161094d57604051631da7447960e21b815260040160405180910390fd5b5060028054600180820190925560008181526003602052604090208181559091810161097a888a836115d3565b506002810161098a8688836115d3565b5060038101849055600060048201556005810180546001600160a01b031916339081179091556006820184905560405183907fdc26653af5b99b2da33e2ad69ee6600d9aeccc82b034501db4338309615ca238906109ef908c908c908a908a90611694565b60405180910390a3509695505050505050565b6060816002548110610a27576040516337f9b70b60e11b815260040160405180910390fd5b600083815260036020908152604080832060070180548251818502810185019093528083529193909284015b82821015610b4957600084815260209081902060408051608081018252600486029092018054835260018101546001600160a01b03169383019390935260028301805492939291840191610aa6906113ed565b80601f0160208091040260200160405190810160405280929190818152602001828054610ad2906113ed565b8015610b1f5780601f10610af457610100808354040283529160200191610b1f565b820191906000526020600020905b815481529060010190602001808311610b0257829003601f168201915b50505091835250506003919091015460ff1615156020918201529082526001929092019101610a53565b50505050915050919050565b6000816002548110610b7a576040516337f9b70b60e11b815260040160405180910390fd5b505060009081526003602052604090206006015442111590565b816002548110610bb7576040516337f9b70b60e11b815260040160405180910390fd5b60008381526003602052604090206005015483906001600160a01b03163314610bf35760405163538f0ebf60e01b815260040160405180910390fd5b610bfb611037565b600084815260036020526040902060078101548410610c2d5760405163566dafb760e11b815260040160405180910390fd5b6000816007018581548110610c4457610c446116bb565b60009182526020909120600490910201600381015490915060ff1615610c7d57604051633409745d60e01b815260040160405180910390fd5b600482015481541115610ca357604051631e9acf1760e31b815260040160405180910390fd5b60038101805460ff191660011790558054600483018054600090610cc89084906116d1565b9091555050805460018201546040518281526001600160a01b0390911690819088908a907f2beeb897393025a6f9e7fcd378f2f064c2a9d944e543ac2469740b2d99bafcf49060200160405180910390a46000816001600160a01b03168360405160006040518083038185875af1925050503d8060008114610d66576040519150601f19603f3d011682016040523d82523d6000602084013e610d6b565b606091505b5050905080610d8d576040516312171d8360e31b815260040160405180910390fd5b5050505050610d9b60018055565b50505050565b806002548110610dc4576040516337f9b70b60e11b815260040160405180910390fd5b6000828152600360205260409020600601548290421115610df857604051638320b48360e01b815260040160405180910390fd5b34600003610e1957604051637685480d60e11b815260040160405180910390fd5b600083815260036020526040812060048101805491923492610e3c9084906116e4565b9091555050604051348152339085907f0b5b4c52969ff7329ecf7ee536409fda87812b15a8622bc6e8cdeab3aee14a269060200160405180910390a350505050565b610e8661100a565b6001600160a01b038116610eb557604051631e4fbdf760e01b8152600060048201526024015b60405180910390fd5b61083e81611061565b60008060606000856002548110610ee8576040516337f9b70b60e11b815260040160405180910390fd5b600087815260036020526040902060078101548710610f1a5760405163566dafb760e11b815260040160405180910390fd5b6000816007018881548110610f3157610f316116bb565b6000918252602090912060049091020180546001820154600383015460028401805494955092936001600160a01b03909216929160ff909116908290610f76906113ed565b80601f0160208091040260200160405190810160405280929190818152602001828054610fa2906113ed565b8015610fef5780601f10610fc457610100808354040283529160200191610fef565b820191906000526020600020905b815481529060010190602001808311610fd257829003601f168201915b50505050509150965096509650965050505092959194509250565b6000546001600160a01b031633146108535760405163118cdaa760e01b8152336004820152602401610eac565b60026001540361105a57604051633ee5aeb560e01b815260040160405180910390fd5b6002600155565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6001600160a01b038116811461083e57600080fd5b60008083601f8401126110d857600080fd5b50813567ffffffffffffffff8111156110f057600080fd5b60208301915083602082850101111561110857600080fd5b9250929050565b60008060008060006080868803121561112757600080fd5b85359450602086013593506040860135611140816110b1565b9250606086013567ffffffffffffffff81111561115c57600080fd5b611168888289016110c6565b969995985093965092949392505050565b60006020828403121561118b57600080fd5b5035919050565b6000815180845260005b818110156111b85760208185018101518683018201520161119c565b506000602082860101526020601f19601f83011685010191505092915050565b60006101008a83528060208401526111f28184018b611192565b90508281036040840152611206818a611192565b6060840198909852505060808101949094526001600160a01b039290921660a084015260c083015260e0909101529392505050565b60006020828403121561124d57600080fd5b8135611258816110b1565b9392505050565b6000806000806000806080878903121561127857600080fd5b863567ffffffffffffffff8082111561129057600080fd5b61129c8a838b016110c6565b909850965060208901359150808211156112b557600080fd5b506112c289828a016110c6565b979a9699509760408101359660609091013595509350505050565b600060208083018184528085518083526040925060408601915060408160051b87010184880160005b8381101561136a57888303603f19018552815180518452878101516001600160a01b0316888501528681015160808886018190529061134782870182611192565b606093840151151596909301959095525094870194925090860190600101611306565b509098975050505050505050565b6000806040838503121561138b57600080fd5b50508035926020909101359150565b8481526001600160a01b03841660208201526080604082018190526000906113c490830185611192565b9050821515606083015295945050505050565b634e487b7160e01b600052604160045260246000fd5b600181811c9082168061140157607f821691505b6020821081036108c257634e487b7160e01b600052602260045260246000fd5b601f82111561146d576000816000526020600020601f850160051c8101602086101561144a5750805b601f850160051c820191505b8181101561146957828155600101611456565b5050505b505050565b815167ffffffffffffffff81111561148c5761148c6113d7565b6114a08161149a84546113ed565b84611421565b602080601f8311600181146114d557600084156114bd5750858301515b600019600386901b1c1916600185901b178555611469565b600085815260208120601f198616915b82811015611504578886015182559484019460019091019084016114e5565b50858210156115225787850151600019600388901b60f8161c191681555b5050505050600190811b01905550565b81835281816020850137506000828201602090810191909152601f909101601f19169091010190565b838152604060208201526000611575604083018486611532565b95945050505050565b634e487b7160e01b600052601160045260246000fd5b80820281158282048414176115ab576115ab61157e565b92915050565b6000826115ce57634e487b7160e01b600052601260045260246000fd5b500490565b67ffffffffffffffff8311156115eb576115eb6113d7565b6115ff836115f983546113ed565b83611421565b6000601f841160018114611633576000851561161b5750838201355b600019600387901b1c1916600186901b17835561168d565b600083815260209020601f19861690835b828110156116645786850135825560209485019460019092019101611644565b50868210156116815760001960f88860031b161c19848701351681555b505060018560011b0183555b5050505050565b6060815260006116a8606083018688611532565b6020830194909452506040015292915050565b634e487b7160e01b600052603260045260246000fd5b818103818111156115ab576115ab61157e565b808201808211156115ab576115ab61157e56fea2646970667358221220abfff77cf0b5bdea80a9afc511e377b71734396cf06628590f1b9a4888e8022664736f6c63430008190033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

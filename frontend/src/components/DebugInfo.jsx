@@ -9,6 +9,8 @@ const DebugInfo = () => {
     return null;
   }
 
+  const isWrongNetwork = isConnected && chainId !== 11155111;
+
   return (
     <div className="fixed bottom-4 left-4 bg-black bg-opacity-80 text-white p-3 rounded-lg text-xs max-w-sm z-50">
       <div className="font-bold mb-2">🐛 Debug Info</div>
@@ -16,13 +18,25 @@ const DebugInfo = () => {
       <div className="space-y-1">
         <div><span className="text-blue-300">Wallet:</span> {isConnected ? '✅ Connected' : '❌ Not connected'}</div>
         {account && <div><span className="text-blue-300">Account:</span> {account.slice(0, 6)}...{account.slice(-4)}</div>}
-        {chainId && <div><span className="text-blue-300">Chain ID:</span> {chainId}</div>}
+        {chainId && (
+          <div>
+            <span className="text-blue-300">Chain ID:</span> {chainId}
+            {isWrongNetwork && <span className="text-yellow-300"> ⚠️ Wrong network!</span>}
+          </div>
+        )}
         {walletError && <div><span className="text-red-300">Wallet Error:</span> {walletError}</div>}
         
         <div><span className="text-green-300">Contract:</span> {contractAddress ? '✅ Initialized' : '❌ Not initialized'}</div>
         {contractAddress && <div><span className="text-green-300">Address:</span> {contractAddress.slice(0, 6)}...{contractAddress.slice(-4)}</div>}
         <div><span className="text-green-300">Loading:</span> {loading ? '🔄 Yes' : '✅ No'}</div>
         {contractError && <div><span className="text-red-300">Contract Error:</span> {contractError}</div>}
+        
+        {isWrongNetwork && (
+          <div className="mt-2 pt-2 border-t border-gray-600">
+            <div className="text-yellow-300 font-bold">⚠️ Action Required:</div>
+            <div className="text-yellow-200">Switch MetaMask to Sepolia network</div>
+          </div>
+        )}
       </div>
     </div>
   );
